@@ -2,6 +2,9 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: antiquewhite;
     margin: 0;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .bodycontainer {
@@ -32,4 +35,34 @@ button:active {
     border: 2px solid green;
     background-color: black;
     transition: 0.2s;
+}
+
+.gamearea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10vw;
+}
+
+.playerturn {
+    display: flex;
+}
+
+.gamegrid {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+}
+
+.gamegrid>div {
+    background-color: lightgreen;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+}
+
+.gamegrid>div[data='1'] {
+
 }
