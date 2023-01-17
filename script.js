@@ -1,3 +1,4 @@
+
 //Create array which will hold the data.
 let ticTacArray = []
 //DOM - create a button which moves to a new round when a winner is found.
@@ -15,7 +16,7 @@ playerOneTurnSignal.style.color = 'white'
 let playerTwoTurnSignal = document.querySelector('.playertwo')
 playerTwoTurnSignal.style.color = 'white'
 let computerGameButton = document.getElementById('playcomputerbutton')
-// Set global variables - score, round number, amount of noughts & crosses
+// Set global variables - score, round number, amount of noughts & crosses, computer square selection
 let clickGrid = 0;
 let score = 0;
 let playerOneScore = 0;
@@ -45,11 +46,20 @@ twoPlayerPlayerTwoScore.classList.add('playerscore')
 twoPlayerButton.addEventListener('click', (twoPlayerGame))
 twoPlayerButton.addEventListener('click', () => {
         playerOneTurnSignal.style.color = 'black'
+        computerGameButton.style.visibility = 'hidden'
 })
 
 computerGameButton.addEventListener('click', (gameVersusComputer))
+computerGameButton.addEventListener('click', () => {
+    twoPlayerButton.style.visibility = 'hidden'
+    resetButton.disabled = false
+    computerGameButton.disabled = true
+})
+
 
 function gameVersusComputer() {
+    roundNumberText.innerHTML = `Round number: ${roundNumber}`
+    gameArea.appendChild(roundNumberText)
     for (let i = 0; i < 9; i++) {
         let gameGridDiv = document.createElement('div')
         gameGridDiv.classList.add('gameGridDiv')
@@ -60,10 +70,23 @@ function gameVersusComputer() {
         gameBoard.appendChild(gameGridDiv)
         let gameGridDivNumber = gameGridDiv.getAttribute('data')
         ticTacArray.push(gameGridDivNumber)
+        gameGridDiv.addEventListener('click', () => {
+        clickGrid++;
+
+        if (clickGrid % 2 != 0) {
+            gameGridDiv.innerHTML = 'x'
+            let cross = {squareNumber: gameGridDivNumber, value: 'x'}
+            ticTacArray[gameGridDivNumber - 1] = cross
+        } else if (clickGrid % 2 == 0) {
+            computerTurn();
+        }
+    })
 }
 }
 
 function twoPlayerGame() {
+    twoPlayerPlayerOneScore.style.visibility = 'visible'
+    twoPlayerPlayerTwoScore.style.visibility = 'visible'
         for (let i = 0; i < 9; i++) {
             let gameGridDiv = document.createElement('div')
             gameGridDiv.classList.add('gameGridDiv')
@@ -88,7 +111,9 @@ function twoPlayerGame() {
                     playerOneTurnSignal.style.color = 'black'
                     playerTwoTurnSignal.style.color = 'white'
                 }
+                if (gameGridDiv.innerHTML != '') return clickGrid
                 clickGrid++
+                console.log(clickGrid)
                 if (roundNumber % 2 != 0) {
                     if (clickGrid % 2 != 0) {
                         gameGridDiv.innerHTML = 'x'
@@ -162,17 +187,25 @@ nextRoundButton.addEventListener('click', () => {
     clickGrid = 0;
 })
 
+function computerTurn() {
+        let aiSquareSelect = Math.floor(Math.random() * ticTacArray.length)
+        let nought = {squareNumber: aiSquareSelect, value: 'o'}
+        if (ticTacArray[aiSquareSelect == Number]) {
+        ticTacArray[aiSquareSelect] = nought
+        console.log(ticTacArray)
+        }
+}
 
 function deleteGrid() {
     ticTacArray = []
     twoPlayerButton.disabled = false;
+    computerGameButton.disbaled = false;
     console.log(ticTacArray)
     let gridSquare = gameBoard.lastElementChild;
     while (gridSquare) {
         gameBoard.removeChild(gridSquare)
         gridSquare = gameBoard.lastElementChild
     }
-
 }
 
 resetButton.onclick = function() {
@@ -180,11 +213,16 @@ resetButton.onclick = function() {
     clickGrid = 0;
     roundNumber = 1;
     playerOneScore = 0;
+    twoPlayerPlayerOneScore.style.visibility = 'hidden'
+    twoPlayerPlayerTwoScore.style.visibility = 'hidden'
     playerTwoScore = 0;
     resetButton.disabled = true;
+    computerGameButton.disabled = false
     playerOneTurnSignal.style.color = 'white'
     playerTwoTurnSignal.style.color = 'white'
     roundNumberText.remove()
+    computerGameButton.style.visibility = 'visible'
+    twoPlayerButton.style.visibility = 'visible'
 }
 
 function gameEnd() {
@@ -197,260 +235,6 @@ function gameEnd() {
             alert('Player one wins!') ? "" : location.reload();
         } else {
             alert('Player two wins!') ? "" : location.reload();
-    }
-}
-}
-//Winner announcement - abstracted away due to length.
-
-function winnerAnnouncement() {
-    //player two win message
-if (roundNumber % 2 != 0) {
-    if (ticTacArray[0].value == 'o' && ticTacArray[1].value == 'o' && ticTacArray[2].value == 'o') {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[3].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[5].value == 'o') {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[6].value == 'o' && ticTacArray[7].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'o' && ticTacArray[3].value == 'o' && ticTacArray[6].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[1].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[7].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'o' && ticTacArray[5].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[6].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-        //player one win message
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[1].value == 'x' && ticTacArray[2].value == 'x') {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[3].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[5].value == 'x') {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[6].value == 'x' && ticTacArray[7].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[3].value == 'x' && ticTacArray[6].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[1].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[7].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'x' && ticTacArray[5].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[6].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (clickGrid == 9) {
-        playerOneTurnSignal.textContent = "It's a tie!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.marginRight = '5px'
-        playerTwoTurnSignal.textContent = "Play again!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        nextRoundButton.style.display = 'inline'
-    }
-} else if (roundNumber % 2 == 0) {
-    if (ticTacArray[0].value == 'o' && ticTacArray[1].value == 'o' && ticTacArray[2].value == 'o') {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[3].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[5].value == 'o') {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[6].value == 'o' && ticTacArray[7].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'o' && ticTacArray[3].value == 'o' && ticTacArray[6].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[1].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[7].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'o' && ticTacArray[5].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[6].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'o' && ticTacArray[4].value == 'o' && ticTacArray[8].value == 'o' ) {
-        playerOneTurnSignal.textContent = "Player one wins!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerTwoTurnSignal.style.color = 'white'
-        playerOneScore++;
-        nextRoundButton.style.display = 'inline';
-        //player one win message
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[1].value == 'x' && ticTacArray[2].value == 'x') {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[3].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[5].value == 'x') {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[6].value == 'x' && ticTacArray[7].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[3].value == 'x' && ticTacArray[6].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[1].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[7].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'x' && ticTacArray[5].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[2].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[6].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (ticTacArray[0].value == 'x' && ticTacArray[4].value == 'x' && ticTacArray[8].value == 'x' ) {
-        playerTwoTurnSignal.textContent = "Player two wins!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.color = 'white'
-        playerTwoScore++;
-        nextRoundButton.style.display = 'inline';
-    } else if (clickGrid == 9) {
-        playerOneTurnSignal.textContent = "It's a tie!"
-        playerOneTurnSignal.style.color = 'blue'
-        playerOneTurnSignal.style.fontWeight = 'bolder'
-        playerOneTurnSignal.style.marginRight = '5px'
-        playerTwoTurnSignal.textContent = "Play again!"
-        playerTwoTurnSignal.style.color = 'blue'
-        playerTwoTurnSignal.style.fontWeight = 'bolder'
-        nextRoundButton.style.display = 'inline'
     }
 }
 }
